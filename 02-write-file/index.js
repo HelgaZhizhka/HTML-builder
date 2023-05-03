@@ -1,6 +1,7 @@
 const fs = require('fs')
 const path = require('path')
-const { stdin } = process
+const readline = require('readline')  
+const { stdin, stdout } = process
 
 
 const outFile = path.join(__dirname, 'new.txt')
@@ -8,13 +9,20 @@ const writeStream = fs.createWriteStream(outFile, { flags: 'a' })
 
 console.log('Напишите какой-то любой текст (выйти: ввести "exit" или нажать Ctrl+C):')
 
-stdin.on('data', (input) => {
-  const text = input.toString().trim()
-
-  if (text === 'exit') {
-    console.log('Пока! До новых встреч!')
-    process.exit()
+const rl = readline.createInterface({
+  input: stdin,
+  output: stdout,
+})
+rl.on('line', (input) => {
+  if (input === 'exit') {
+    console.log('Пока! До новой встречи!')
+    rl.close()
   } else {
-    writeStream.write(text + '\n')
+    writeStream.write(input + '\n')
   }
+})
+process.on('SIGINT', () => {
+  console.log('\nПока! До новой встречи!')
+  rl.close()
+  process.exit()
 })
