@@ -1,11 +1,11 @@
-const fs = require('fs');
+const { createWriteStream } = require('fs');
 const path = require('path');
 const readline = require('readline');
 const { stdin, stdout } = process;
 
 
 const outFile = path.join(__dirname, 'new.txt');
-const writeStream = fs.createWriteStream(outFile, { flags: 'a' });
+const writeStream = createWriteStream(outFile, { flags: 'a' });
 
 console.log('Напишите какой-то любой текст (выйти: ввести "exit" или нажать Ctrl+C):');
 
@@ -21,7 +21,8 @@ rl.on('line', (input) => {
     writeStream.write(input + '\n');
   }
 });
-process.on('SIGINT', () => {
+
+rl.on('SIGINT', () => {
   console.log('\nПока! До новой встречи!');
   rl.close();
   process.exit();
