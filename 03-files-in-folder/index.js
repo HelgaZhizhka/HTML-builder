@@ -1,14 +1,14 @@
-const fsp = require('fs/promises');
+const { readdir, stat } = require('fs/promises');
 const path = require('path');
 
 async function readFilesInFolder() {
   const secretFolder = path.join(__dirname, 'secret-folder');
   try {
-    const files = await fsp.readdir(secretFolder, { withFileTypes: true });
+    const files = await readdir(secretFolder, { withFileTypes: true });
     for (const file of files) {
       if (file.isFile()) {
         const filePath = path.join(secretFolder, file.name);
-        const stats = await fsp.stat(filePath);
+        const stats = await stat(filePath);
         const fileSize = stats.size / 1024;
         const fileExt = path.extname(file.name);
         const fileName = path.basename(file.name, fileExt);
