@@ -1,51 +1,22 @@
-const fs = require('fs');
+const fsp = require('fs/promises');
 const path = require('path');
 
-const secretFolder = path.join(__dirname, 'secret-folder');
-
-function readdirPromise(folderPath, options) {
-  return new Promise((resolve, reject) => {
-    fs.readdir(folderPath, options, (err, files) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(files);
-      }
-    });
-  });
-}
-
-function statPromise(filePath) {
-  return new Promise((resolve, reject) => {
-    fs.stat(filePath, (err, stats) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(stats);
-      }
-    });
-  });
-}
-
-readdirPromise(secretFolder, { withFileTypes: true })
-  .then((files) => {
-    files.forEach((file) => {
+async function readFilesInFolder() {
+  const secretFolder = path.join(__dirname, 'secret-folder');
+  try {
+    const files = await fsp.readdir(secretFolder, { withFileTypes: true });
+    for (const file of files) {
       if (file.isFile()) {
         const filePath = path.join(secretFolder, file.name);
-        statPromise(filePath)
-          .then((stats) => {
-            const ext = path.extname(file.name);
-            const name = path.basename(file.name, ext);
-            const size = stats.size / 1024;
-
-            console.log(`${name} - ${ext} - ${size.toFixed(3)}kb`);
-          })
-          .catch((err) => {
-            console.error('Ошибка при получении информации о файле:', err);
-          });
+        const stats = await fsp.stat(filePath);
+        const fileSize = stats.size / 1024;
+        const fileExt = path.extname(file.name);
+        const fileName = path.basename(file.name, fileExt);
+        console.log(`${fileName} - ${fileExt.substring(1)} - ${fileSize.toFixed(3)}kb`);
       }
-    });
-  })
-  .catch((err) => {
-    console.error('Ошибка при чтении директории:', err);
-  });
+    }
+  } catch (err) {
+    console.error(`Ошибка при чтении папки ${secretFolder}`);
+  }
+}
+readFilesInFolder();
