@@ -7,7 +7,6 @@ const assetsDir = path.join(__dirname, 'assets');
 const distDir = path.join(__dirname, 'project-dist');
 
 (async () => {
-  // Удаление папки distDir перед сборкой
   try {
     await fsp.rm(distDir, { recursive: true, force: true });
   } catch (err) {

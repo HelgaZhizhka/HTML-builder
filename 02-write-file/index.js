@@ -13,12 +13,13 @@ const rl = readline.createInterface({
   input: stdin,
   output: stdout,
 });
+
 rl.on('line', (input) => {
   if (input === 'exit') {
     console.log('Пока! До новой встречи!');
     rl.close();
   } else {
-    writeStream.write(input + '\n');
+    writeStream.write(`${input}\n`);
   }
 });
 
