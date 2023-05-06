@@ -33,5 +33,10 @@ async function copyDir(src, dest) {
 
 const srcDir = path.join(__dirname, 'files');
 const destDir = path.join(__dirname, 'files-copy');
-copyDir(srcDir, destDir).then(() => console.log('Копирование папки прошло успешно'));
+
+(async () => {
+  await copyDir(srcDir, destDir);
+  console.log('Копирование папки прошло успешно');
+})();
+
 

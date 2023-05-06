@@ -10,7 +10,7 @@ const distDir = path.join(__dirname, 'project-dist');
   try {
     await fsp.rm(distDir, { recursive: true, force: true });
   } catch (err) {
-    console.error(`Ошибка удаления папки distDir: ${err.message}`);
+    console.error(`Ошибка удаления папки ${distDir}: ${err.message}`);
   }
 
   const layout = await fsp.readFile(layoutPath, 'utf-8');
